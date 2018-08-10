@@ -92,8 +92,13 @@ P = P(Iz,:);
 O = O(Iz,:);
 zVec = zVec(Iz);
 
-% Cleaning (just remove NaNs for now...)
-[Cc Tc Pc] = sx_cleanCTD(timeVecCTD, zVec, C,T,P);
+% $$$ % Cleaning (just remove NaNs for now...)
+% $$$ [Cc Tc Pc] = sx_cleanCTD(timeVecCTD, zVec, C,T,P);
+
+% fill missing (replace sx_cleanCTD.m)
+Cc =  sx_clean_missing(timeVec, zVec, C);
+Tc =  sx_clean_missing(timeVec, zVec, T);
+Pc =  sx_clean_missing(timeVec, zVec, P);
 
 % GSW stuff
 SP = gsw_SP_from_C(Cc,Tc,Pc);
@@ -136,9 +141,13 @@ CDOM = CDOM(Iz,:);
 I = find(BB<0);
 BB(I) = NaN;
 
-% Quick vertical ITP
-[CHL BB CDOM] = sx_cleanCTD(timeVec, zVec, CHL,BB,CDOM);
+% $$$ % Quick vertical ITP
+% $$$ [CHL BB CDOM] = sx_cleanCTD(timeVec, zVec, CHL,BB,CDOM);
 
+% fill missing (replace sx_cleanCTD.m)
+CHL =  sx_clean_missing(timeVec, zVec, CHL);
+BB =  sx_clean_missing(timeVec, zVec, BB);
+CDOM =  sx_clean_missing(timeVec, zVec, CDOM);
 
 %% MiniFLuo
 disp(' -> Minifluo-UV')
@@ -162,22 +171,30 @@ PHEc = PHEc(Iz,:);
 PHEm = PHEm(Iz,:);
 
 % clean (must be modified)
-[TRYc, TRYm, YY] = sx_cleanCTD(timeVec, zVec, TRYc,TRYm,TRYc);
-[PHEc, PHEm, YY] = sx_cleanCTD(timeVec, zVec, PHEc,PHEm,TRYc);
+% $$$ [TRYc, TRYm, YY] = sx_cleanCTD(timeVec, zVec, TRYc,TRYm,TRYc);
+% $$$ [PHEc, PHEm, YY] = sx_cleanCTD(timeVec, zVec, PHEc,PHEm,TRYc);
+
+% fill missing (replace sx_cleanCTD.m)
+TRYc =  sx_clean_missing(timeVec, zVec, TRYc);
+TRYm =  sx_clean_missing(timeVec, zVec, TRYm);
+PHEc =  sx_clean_missing(timeVec, zVec, PHEc);
+PHEm =  sx_clean_missing(timeVec, zVec, PHEm);
+
+
 
 % get + apply calibration
 TRY_calib = s.deployment.calibration.MFL.TRY_std;
 PHE_calib = s.deployment.calibration.MFL.PHE_spf;
 NAP_calib = s.deployment.calibration.MFL.NAP_spf;
-TRY_blank = s.deployment.calibration.MFL.TRY_blank;
-PHE_blank = s.deployment.calibration.MFL.PHE_blank;
-NAP_blank = s.deployment.calibration.MFL.NAP_blank;
+TRY_blank = s.deployment.calibration.MFL.TRY_std_blank;
+PHE_blank = s.deployment.calibration.MFL.PHE_spf_blank;
+NAP_blank = s.deployment.calibration.MFL.NAP_spf_blank;
 DARK = s.deployment.calibration.MFL.DARK;
     
 TRY_ru = ( ((TRYc-DARK)./(TRYm-DARK)) );
 PHE_ru = ( ((PHEc-DARK)./(PHEm-DARK)) );
 
-if isempty(TRY_blank) % Assume blank = 0;
+if isempty(NAP_blank) % Assume blank = 0;
     TRY = ( ((TRYc-DARK)./(TRYm-DARK)) )./TRY_calib;
     PHE = ( ((PHEc-DARK)./(PHEm-DARK)) )./PHE_calib;
     NAP = ( ((TRYc-DARK)./(TRYm-DARK)) )./NAP_calib;

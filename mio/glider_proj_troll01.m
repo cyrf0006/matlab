@@ -4,7 +4,7 @@ close all
 clear all
 
 %% Load data file (originaly glider_contours2.m)
-matFile = '~/data/GliderData/SEA003/20180503/matlab/SEA003_20180503_l2.mat'
+matFile = '~/data/GliderData/SEA003/20161118/matlab/SEA003_20161118_l2.mat'
 output = glider_process_socib(matFile, 10, 325, 1);
 names = fieldnames(output);
 for i=1:length(names)
