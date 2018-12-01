@@ -7,6 +7,15 @@ FONTSIZE = 10;
 vredux = .8;
 hredux = .7;
 
+%% Waypoints definition
+WP = ...
+    [ 60+45.0/60 3+12.0/60
+      60+55.0/60 4+22.0/60
+      60+46.8/60 3+24.6/60
+      60+41.0/60 3+47.0/60
+      60+52.0/60 3+35.2/60];
+WP_names =  {'L1', 'L2', 'T1', 'T2' 'T3'};
+
 
 %% By-pass existing calibration   <------------ ***
 % (ideally, netcdf files should be re-generated with new calib.)
@@ -68,7 +77,7 @@ clf
 set(gcf,'PaperUnits','centimeters','PaperPosition',[1 1 17 20])
 
 % -> Naphs
-tracer = nanmean(NAP(1:10, :));
+tracer = nanmean(NAP(1:10, :))*1000;
 subplot(211)
 m_proj('mercator','long',lonLims,'lat',latLims);
 hold on
@@ -84,9 +93,9 @@ ylabel('Latitude', 'FontSize', FS, 'fontweight', 'bold')
 
 [x,y] = m_ll2xy(lonVec, latVec);
 h=scatter(x,y,25,tracer,'filled');
-caxis([0.05, .16])
+caxis([0.05, .16]*1000)
 c = colorbar;
-ylabel(c,'Naph-like (ug L^{-1})', 'FontSize', FS, 'fontweight', 'bold')
+ylabel(c,'Naph-like (ng L^{-1})', 'FontSize', FS, 'fontweight', 'bold')
 m_grid('box','fancy')
 
 
@@ -98,34 +107,46 @@ SEn = [60.7525, 3.4373];
 CP = [60.7673, 3.6082];
 SEq = [60.8302, 3.5699];
 HT = [60.7109, 3.4040];
-m_line(trollA(2), trollA(1), 'marker', 'p', 'color', 'm', 'markerFaceColor', ...
-       'm', 'markersize',14);
-m_line(trollB(2), trollB(1), 'marker', 'p', 'color', 'm', 'markerFaceColor', ...
-       'm', 'markersize',14);
-m_line(trollC(2), trollC(1), 'marker', 'p', 'color', 'm', 'markerFaceColor', ...
-       'm', 'markersize',14);
+m_line(trollA(2), trollA(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
+       'b', 'markersize',14);
+m_line(trollB(2), trollB(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
+       'b', 'markersize',14);
+m_line(trollC(2), trollC(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
+       'b', 'markersize',14);
 m_line(SEn(2), SEn(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
        'b', 'markersize',14);
 m_line(CP(2), CP(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
        'b', 'markersize',14);
 m_line(SEq(2), SEq(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
        'b', 'markersize',14);
-m_line(HT(2), HT(1), 'marker', 'p', 'color', 'c', 'markerFaceColor', ...
-       'c', 'markersize',14);
-m_text(trollA(2)+.01, trollA(1), 'A', 'color', 'm', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top')
-m_text(trollB(2)+.01, trollB(1), 'B', 'color', 'm', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top')
-m_text(trollC(2)+.01, trollC(1), 'C', 'color', 'm', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top')
-m_text(SEn(2)+.01, SEn(1), 'SEn', 'color', 'b', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top')
-m_text(CP(2)+.01, CP(1), 'CP', 'color', 'b', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top')
-m_text(SEq(2)+.01, SEq(1), 'SEq', 'color', 'b', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top')
-m_text(HT(2)+.01, HT(1), 'HT', 'color', 'c', 'horizontalAlignment', 'left', ...
-       'verticalAlignment', 'top', 'fontWeight', 'bold')
+% $$$ m_line(HT(2), HT(1), 'marker', 'p', 'color', 'c', 'markerFaceColor', ...
+% $$$        'c', 'markersize',14);
+% $$$ m_text(trollA(2)+.01, trollA(1), 'A', 'color', 'm', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top')
+% $$$ m_text(trollB(2)+.01, trollB(1), 'B', 'color', 'm', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top')
+% $$$ m_text(trollC(2)+.01, trollC(1), 'C', 'color', 'm', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top')
+% $$$ m_text(SEn(2)+.01, SEn(1), 'SEn', 'color', 'b', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top')
+% $$$ m_text(CP(2)+.01, CP(1), 'CP', 'color', 'b', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top')
+% $$$ m_text(SEq(2)+.01, SEq(1), 'SEq', 'color', 'b', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top')
+% $$$ m_text(HT(2)+.01, HT(1), 'HT', 'color', 'c', 'horizontalAlignment', 'left', ...
+% $$$        'verticalAlignment', 'top', 'fontWeight', 'bold')
+%% add WPs
+for i = 1:size(WP,1)
+    m_plot(WP(i,2),WP(i,1), '.', 'color', [.3 .3 .3], 'markerSize', 14);
+end
+
+m_text(WP(1,2),WP(1,1), WP_names(1), 'color', [.3 .3 .3], 'verticalAlignment', 'bottom', 'horizontalAlignment', 'left', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(2,2),WP(2,1), WP_names(2), 'color', [.3 .3 .3], 'verticalAlignment', 'top', 'horizontal', 'right', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(3,2),WP(3,1), WP_names(3), 'color', [.3 .3 .3], 'verticalAlignment', 'bottom', 'horizontal', 'right', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(4,2),WP(4,1), WP_names(4), 'color', [.3 .3 .3], 'verticalAlignment', 'middle', 'horizontalAlignment', 'left', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(5,2),WP(5,1), WP_names(5), 'color', [.3 .3 .3], 'verticalAlignment', 'bottom', 'horizontal', 'right', 'fontSize', 14, 'fontweight', 'bold');
+
+
 adjust_space
 
 pause(1)
@@ -167,20 +188,32 @@ SEn = [60.7525, 3.4373];
 CP = [60.7673, 3.6082];
 SEq = [60.8302, 3.5699];
 HT = [60.7109, 3.4040];
-m_line(trollA(2), trollA(1), 'marker', 'p', 'color', 'm', 'markerFaceColor', ...
-       'm', 'markersize',14);
-m_line(trollB(2), trollB(1), 'marker', 'p', 'color', 'm', 'markerFaceColor', ...
-       'm', 'markersize',14);
-m_line(trollC(2), trollC(1), 'marker', 'p', 'color', 'm', 'markerFaceColor', ...
-       'm', 'markersize',14);
+m_line(trollA(2), trollA(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
+       'b', 'markersize',14);
+m_line(trollB(2), trollB(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
+       'b', 'markersize',14);
+m_line(trollC(2), trollC(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
+       'b', 'markersize',14);
 m_line(SEn(2), SEn(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
        'b', 'markersize',14);
 m_line(CP(2), CP(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
        'b', 'markersize',14);
 m_line(SEq(2), SEq(1), 'marker', 'p', 'color', 'b', 'markerFaceColor', ...
        'b', 'markersize',14);
-m_line(HT(2), HT(1), 'marker', 'p', 'color', 'c', 'markerFaceColor', ...
-       'c', 'markersize',14);
+% $$$ m_line(HT(2), HT(1), 'marker', 'p', 'color', 'c', 'markerFaceColor', ...
+% $$$        'c', 'markersize',14);
+%% add WPs
+for i = 1:size(WP,1)
+    m_plot(WP(i,2),WP(i,1), '.', 'color', [.3 .3 .3], 'markerSize', 14);
+end
+
+m_text(WP(1,2),WP(1,1), WP_names(1), 'color', [.3 .3 .3], 'verticalAlignment', 'bottom', 'horizontalAlignment', 'left', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(2,2),WP(2,1), WP_names(2), 'color', [.3 .3 .3], 'verticalAlignment', 'top', 'horizontal', 'right', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(3,2),WP(3,1), WP_names(3), 'color', [.3 .3 .3], 'verticalAlignment', 'bottom', 'horizontal', 'right', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(4,2),WP(4,1), WP_names(4), 'color', [.3 .3 .3], 'verticalAlignment', 'middle', 'horizontalAlignment', 'left', 'fontSize', 14, 'fontweight', 'bold');
+m_text(WP(5,2),WP(5,1), WP_names(5), 'color', [.3 .3 .3], 'verticalAlignment', 'bottom', 'horizontal', 'right', 'fontSize', 14, 'fontweight', 'bold');
+
+
 adjust_space
 pause(1)
 

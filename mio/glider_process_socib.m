@@ -97,6 +97,7 @@ zVec = zVec(Iz);
 
 % fill missing (replace sx_cleanCTD.m)
 Cc =  sx_clean_missing(timeVec, zVec, C);
+Sc =  sx_clean_missing(timeVec, zVec, S);
 Tc =  sx_clean_missing(timeVec, zVec, T);
 Pc =  sx_clean_missing(timeVec, zVec, P);
 
@@ -149,61 +150,6 @@ CHL =  sx_clean_missing(timeVec, zVec, CHL);
 BB =  sx_clean_missing(timeVec, zVec, BB);
 CDOM =  sx_clean_missing(timeVec, zVec, CDOM);
 
-%% MiniFLuo
-disp(' -> Minifluo-UV')
-% Check version of MFL
-if s.deployment.calibration.MFL.SN <= 8 % legacy
-    TRYc = s.data_grid.fluorescence_270_340'; % counts
-    PHEc = s.data_grid.fluorescence_255_360'; % counts
-    PHEm = s.data_grid.fluorescence_monitoring_270_340'; % counts_monitor
-    TRYm = s.data_grid.fluorescence_monitoring_255_360'; % counts_monitor
-else
-    TRYc = s.data_grid.fluorescence_270_340'; % counts
-    PHEc = s.data_grid.fluorescence_255_360'; % counts
-    TRYm = s.data_grid.fluorescence_monitoring_270_340'; % counts_monitor
-    PHEm = s.data_grid.fluorescence_monitoring_255_360'; % counts_monitor
-end
-
-% restrict depths
-TRYc = TRYc(Iz,:);
-TRYm = TRYm(Iz,:);
-PHEc = PHEc(Iz,:);
-PHEm = PHEm(Iz,:);
-
-% clean (must be modified)
-% $$$ [TRYc, TRYm, YY] = sx_cleanCTD(timeVec, zVec, TRYc,TRYm,TRYc);
-% $$$ [PHEc, PHEm, YY] = sx_cleanCTD(timeVec, zVec, PHEc,PHEm,TRYc);
-
-% fill missing (replace sx_cleanCTD.m)
-TRYc =  sx_clean_missing(timeVec, zVec, TRYc);
-TRYm =  sx_clean_missing(timeVec, zVec, TRYm);
-PHEc =  sx_clean_missing(timeVec, zVec, PHEc);
-PHEm =  sx_clean_missing(timeVec, zVec, PHEm);
-
-
-
-% get + apply calibration
-TRY_calib = s.deployment.calibration.MFL.TRY_std;
-PHE_calib = s.deployment.calibration.MFL.PHE_spf;
-NAP_calib = s.deployment.calibration.MFL.NAP_spf;
-TRY_blank = s.deployment.calibration.MFL.TRY_std_blank;
-PHE_blank = s.deployment.calibration.MFL.PHE_spf_blank;
-NAP_blank = s.deployment.calibration.MFL.NAP_spf_blank;
-DARK = s.deployment.calibration.MFL.DARK;
-    
-TRY_ru = ( ((TRYc-DARK)./(TRYm-DARK)) );
-PHE_ru = ( ((PHEc-DARK)./(PHEm-DARK)) );
-
-if isempty(NAP_blank) % Assume blank = 0;
-    TRY = ( ((TRYc-DARK)./(TRYm-DARK)) )./TRY_calib;
-    PHE = ( ((PHEc-DARK)./(PHEm-DARK)) )./PHE_calib;
-    NAP = ( ((TRYc-DARK)./(TRYm-DARK)) )./NAP_calib;
-else
-    TRY = ( ((TRYc-DARK)./(TRYm-DARK)) - TRY_blank)./TRY_calib;
-    PHE = ( ((PHEc-DARK)./(PHEm-DARK)) - PHE_blank)./PHE_calib;
-    NAP = ( ((TRYc-DARK)./(TRYm-DARK)) - NAP_blank)./NAP_calib;
-end
-
 
 output = struct();
 output.timeVec = timeVec;
@@ -215,6 +161,9 @@ output.latVec = latVec;
 output.latVecCTD = latVecCTD;
 output.lonVec = lonVec;
 output.lonVecCTD = lonVecCTD;
+output.T = Tc;
+output.S = Sc;
+output.C = Cc;
 output.CT = CT;
 output.SA = SA;
 output.sig0 = sig0;
@@ -223,8 +172,76 @@ output.O2 = O2;
 output.CHL = CHL;
 output.BB = BB;
 output.CDOM = CDOM;
-output.TRY = TRY;
-output.PHE = PHE;
-output.NAP = NAP;
-output.TRYru = TRY_ru;
-output.PHEru = PHE_ru;
+
+
+%% MiniFLuo
+if isfield(s.data_grid, 'MFL') % Check if MiniFluo is there
+
+    disp(' -> Minifluo-UV')
+    % Check version of MFL
+    if s.deployment.calibration.MFL.SN <= 8 % legacy
+        TRYc = s.data_grid.fluorescence_270_340'; % counts
+        PHEc = s.data_grid.fluorescence_255_360'; % counts
+        PHEm = s.data_grid.fluorescence_monitoring_270_340'; % counts_monitor
+        TRYm = s.data_grid.fluorescence_monitoring_255_360'; % counts_monitor
+    else
+        TRYc = s.data_grid.fluorescence_270_340'; % counts
+        PHEc = s.data_grid.fluorescence_255_360'; % counts
+        TRYm = s.data_grid.fluorescence_monitoring_270_340'; % counts_monitor
+        PHEm = s.data_grid.fluorescence_monitoring_255_360'; % counts_monitor
+    end
+
+    % restrict depths
+    TRYc = TRYc(Iz,:);
+    TRYm = TRYm(Iz,:);
+    PHEc = PHEc(Iz,:);
+    PHEm = PHEm(Iz,:);
+
+    % clean (must be modified)
+% $$$ [TRYc, TRYm, YY] = sx_cleanCTD(timeVec, zVec, TRYc,TRYm,TRYc);
+% $$$ [PHEc, PHEm, YY] = sx_cleanCTD(timeVec, zVec, PHEc,PHEm,TRYc);
+
+    % fill missing (replace sx_cleanCTD.m)
+    TRYc =  sx_clean_missing(timeVec, zVec, TRYc);
+    TRYm =  sx_clean_missing(timeVec, zVec, TRYm);
+    PHEc =  sx_clean_missing(timeVec, zVec, PHEc);
+    PHEm =  sx_clean_missing(timeVec, zVec, PHEm);
+
+
+    % get + apply calibration
+    TRY_calib = s.deployment.calibration.MFL.TRY_std;
+    PHE_calib = s.deployment.calibration.MFL.PHE_spf;
+    NAP_calib = s.deployment.calibration.MFL.NAP_spf;
+    if exist('s.deployment.calibration.MFL.TRY_std_blank')
+        TRY_blank = s.deployment.calibration.MFL.TRY_std_blank;
+        PHE_blank = s.deployment.calibration.MFL.PHE_spf_blank;
+        NAP_blank = s.deployment.calibration.MFL.NAP_spf_blank;
+    else
+        TRY_blank = 0;
+        PHE_blank = 0;
+        NAP_blank = 0;
+    end  
+    DARK = s.deployment.calibration.MFL.DARK;
+
+    TRY_ru = ( ((TRYc-DARK)./(TRYm-DARK)) );
+    PHE_ru = ( ((PHEc-DARK)./(PHEm-DARK)) );
+
+    if isempty(NAP_blank) % Assume blank = 0;
+        TRY = ( ((TRYc-DARK)./(TRYm-DARK)) )./TRY_calib;
+        PHE = ( ((PHEc-DARK)./(PHEm-DARK)) )./PHE_calib;
+        NAP = ( ((TRYc-DARK)./(TRYm-DARK)) )./NAP_calib;
+    else
+        TRY = ( ((TRYc-DARK)./(TRYm-DARK)) - TRY_blank)./TRY_calib;
+        PHE = ( ((PHEc-DARK)./(PHEm-DARK)) - PHE_blank)./PHE_calib;
+        NAP = ( ((TRYc-DARK)./(TRYm-DARK)) - NAP_blank)./NAP_calib;
+    end
+
+    output.TRY = TRY;
+    output.PHE = PHE;
+    output.NAP = NAP;
+    output.TRYru = TRY_ru;
+    output.PHEru = PHE_ru;
+
+
+end
+

@@ -58,6 +58,11 @@ NAP_blank = 0.0684;
 %NAP_blank = 0.0531;
 PHE_calib = 3.0869;
 PHE_blank = -0.0177;
+% Diesel
+% $$$ NAP_calib = 0.1134; % N=5
+% $$$ NAP_blank = 0.3958;
+% $$$ PHE_calib = 0.6002;
+% $$$ PHE_blank = 0.1388;
 % --------------------------------------------- %
 TRY = ( ((F270-DARK)./(F270m-DARK)) - TRY_blank)./TRY_calib;
 PHE = ( ((F255-DARK)./(F255m-DARK)) - PHE_blank)./PHE_calib;
@@ -90,7 +95,10 @@ for i =1:length(time_gcms)
 end
 naph_compa*1000./NAPHS
 phe_compa*1000./PHES
-
+mean((naph_compa*1000 - NAPHS)./NAPHS)*100
+std((naph_compa*1000 - NAPHS)./NAPHS)*100 
+mean((phe_compa(3:end)*1000 - PHES(3:end))./PHES(3:end))*100
+std((phe_compa(3:end)*1000 - PHES(3:end))./PHES(3:end))*100
 
 %plot(phe_is, PHES, 'k.')
 p = polyfit(PHES,phe_is,1);
@@ -250,22 +258,22 @@ text(time_gcms(2), NAPHS(2), 'S02  ', 'fontSize', FS, 'fontWeight', 'bold', 'ver
 text(time_gcms(3), NAPHS(3), 'S03  ', 'fontSize', FS, 'fontWeight', 'bold', 'verticalAlignment', 'bottom', 'horizontalAlignment', 'right')
 text(time_gcms(4), NAPHS(4), 'S04  ', 'fontSize', FS, 'fontWeight', 'bold', 'verticalAlignment', 'bottom', 'horizontalAlignment', 'right')
 text(time_gcms(5), NAPHS(5), 'S05  ', 'fontSize', FS, 'fontWeight', 'bold', 'verticalAlignment', 'bottom', 'horizontalAlignment', 'right')
-text(timeVec1(I(1)), 86, '  a', 'fontSize', FS, 'fontWeight', 'bold')
+text(timeVec1(I(1)), 33, '  a', 'fontSize', FS, 'fontWeight', 'bold')
 legend('MFL raw', 'MFL smooth', 'GC-MS', 'location', 'northEast')
 adjust_space
 
 subplot(222)
-plot(NAPHS/1000, naph_is, 'ok')
+plot(NAPHS, naph_is, 'ok')
 hold on
-plot(NAP_is/1000, TRYru, 'k')
-xlim([0 .1])
+plot(NAP_is, TRYru, 'k')
+xlim([0 .1]*1000)
 ylim([0 .55])
-xlabel('Naphs (ug L^{-1})', 'fontSize', FS, 'fontWeight', 'bold')    
+xlabel('Naphs (ng L^{-1})', 'fontSize', FS, 'fontWeight', 'bold')    
 ylabel('Naph-like (RU)', 'fontSize', FS, 'fontWeight', 'bold')    
 set(gca, 'ygrid', 'on')
 set(gca, 'xgrid', 'on')
 legend('GC-MS', 'y = 5.54x - 0.084', 'location', 'northWest')
-text(.089, .5, 'b', 'fontSize', FS, 'fontWeight', 'bold')
+text(2, .025, 'b', 'fontSize', FS, 'fontWeight', 'bold')
 adjust_space
 
 subplot(223)
@@ -278,23 +286,23 @@ ylabel('Phe-like (ng L^{-1})', 'fontSize', FS, 'fontWeight', 'bold')
 xlabel('11 Oct. 2016', 'fontSize', FS, 'fontWeight', 'bold')
 set(gca, 'ygrid', 'on')
 xlim([timeVec1(I(1)) timeVec1(I(end))])
-text(timeVec1(I(1)), 18, '  c', 'fontSize', FS, 'fontWeight', 'bold')
+text(timeVec1(I(1)), -3, '  c', 'fontSize', FS, 'fontWeight', 'bold')
 %legend('MFL raw', 'MFL smooth', 'GC-MS', 'location', 'northEast')
 adjust_space
 
 
 subplot(224)
-plot(PHES/1000, phe_is, 'ok')
+plot(PHES, phe_is, 'ok')
 hold on
-plot(PHE_is/1000, PHEru, 'k')
-xlim([0 .02])
+plot(PHE_is, PHEru, 'k')
+xlim([0 .02]*1000)
 ylim([0 .25])
-xlabel('Phes (ug L^{-1})', 'fontSize', FS, 'fontWeight', 'bold')    
+xlabel('Phes (ng L^{-1})', 'fontSize', FS, 'fontWeight', 'bold')    
 ylabel('Phe-like (RU)', 'fontSize', FS, 'fontWeight', 'bold')    
 set(gca, 'ygrid', 'on')
 set(gca, 'xgrid', 'on')
 legend('GC-MS', 'y = 6.70x + 0.078', 'location', 'northWest')
-text(.018, .23, 'd', 'fontSize', FS, 'fontWeight', 'bold')
+text(.4, .02, 'd', 'fontSize', FS, 'fontWeight', 'bold')
 adjust_space
 
 

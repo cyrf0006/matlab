@@ -1,12 +1,5 @@
 %% THIS SCRIPT GENERATES THE FIGURE FOUND IN MANUSCRIPT ON PAH
-% -> Run glider_proj_troll01 first!
-
-%% Manual removal of problematic counts in NAP
-NAP(:,36) = NaN;
-NAP(75:300,92) = NaN;
-NAP(1:40,72) = NaN;
-NAP(1:100,74) = NaN;
-
+% -> Run glider_proj_bb2018 first!
 
 
 xtra_offset = 0.03;
@@ -20,16 +13,17 @@ texty = 275;
 texty3 = 20;
 
 FS1=12; % label
-XLIM = [10 m_lldist([origin(2) target(2)], [origin(1) target(1)],1)];
+%XLIM = [0 m_lldist([origin(2) target(2)], [origin(1) target(1)],1)]; %<-- aimed transect
+XLIM = [0 150];
 XTICKS = 0:20:XLIM(end);
-v1 = [26:.1:28];
-v2 = [26:.2:28];
+v1 = [24:.5:28];
+v2 = [24:.2:28];
 
 %% Save info:
 timeProj = timeVec(theIndex);
 latProj = latVec(theIndex);
 lonProj = lonVec(theIndex);
-save projection_nexos02.mat timeProj latProj lonProj
+save projection_bb2018.mat timeProj latProj lonProj
 
 
 x1 = [1 20]; %km
@@ -69,8 +63,8 @@ hold on
 clabel(C,h,v2, 'color', [.5 .5 .5])
 map = flipud(brewermap(14, 'RdBu'));
 colormap(map);
-caxis([7 11.5])
-plot(xBox3, yBox, '--','color', [1 1 1]*0, 'lineWidth', 2)
+caxis([-1 5])
+%plot(xBox3, yBox, '--','color', [1 1 1]*0, 'lineWidth', 2)
 ylabel('Depth (m)', 'FontSize', FS1, 'fontWeight', 'bold')
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -78,7 +72,7 @@ set(gca, 'xtick', XTICKS)
 set(gca, 'tickdir', 'out');
 xlim(XLIM)
 ylim([0 zMax])
-text(XLIM(1)+1,300, 'T (^{\circ}C)  (A)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, 'T (^{\circ}C)  (A)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 cb = colorbar;
 adjust_space
 pause(1)
@@ -90,7 +84,7 @@ cpos(4) = cpos(4)*vredux;
 cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_T_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_T_noplot.png')  
 
 
 %% --------------------------------------------------------------------- %
@@ -122,8 +116,8 @@ hold on
 clabel(C,h,v2, 'color', [.5 .5 .5])
 map = flipud(brewermap(14, 'RdBu'));
 colormap(map);
-caxis([34.5 35.6])
-plot(xBox3, yBox, '--','color', [1 1 1]*0, 'lineWidth', 2)
+caxis([30.25 34.75])
+%plot(xBox3, yBox, '--','color', [1 1 1]*0, 'lineWidth', 2)
 set(gca, 'yticklabel', []);
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -134,7 +128,7 @@ ylim([0 zMax])
 %xlabel('Along-transect distace (km)', 'FontSize', 10, 'fontWeight', 'bold')
 cb = colorbar;
 %ti = ylabel(cb,'S_A (g Kg^{-1})', 'FontSize', 10, 'fontweight', 'bold');
-text(XLIM(1)+1,300, 'S_A (g Kg^{-1})  (B)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold', 'color',[1 1 1]*0)
+text(XLIM(1)+2,300, 'S_A (g Kg^{-1})  (B)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold', 'color',[1 1 1]*0)
 adjust_space
 pause(1)
 
@@ -145,7 +139,7 @@ cpos(4) = cpos(4)*vredux;
 cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_S_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_S_noplot.png')  
 
 
 
@@ -177,7 +171,7 @@ hold on
 contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
 load('PuBuGn_modif.mat');
 colormap(PuBuGn_modif);
-caxis([0 0.5])
+caxis([0 1.2])
 set(gca, 'yticklabel', []);
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -186,7 +180,7 @@ set(gca, 'tickdir', 'out');
 xlim(XLIM)
 ylim([0 zMax])
 cb = colorbar;
-text(XLIM(1)+1,300, '[Chl-a] (\mug L^{-1})  (D)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, '[Chl-a] (\mug L^{-1})  (D)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 adjust_space
 pause(1)
 
@@ -197,61 +191,8 @@ cpos(4) = cpos(4)*vredux;
 cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_CHL_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_CHL_noplot.png')  
 
-
-
-%% --------------------------------------------------------------------- %
-figure(4) % NAP
-clf
-set(gcf,'PaperUnits','centimeters','PaperPosition',[0 0 10 5.5])
-% *********************** Adjust_space.m ************************ %
-% Fields required by the function adjust_space.m. Please fill every
-% of the following and call "adjust_space" in the script whenever
-% you want. Do not touch four last fields
-ncol = 1; % no. subplot column
-nrow = 1; % no. subplot row
-dx = 0.04; % horiz. space between subplots
-dy = 0.1; % vert. space between subplots
-lefs = 0.15; % very left of figure
-rigs = 0.12; % very right of figure
-tops = 0.02; % top of figure
-bots = 0.16; % bottom of figure
-figw = (1-(lefs+rigs+(ncol-1)*dx))/ncol;
-figh = (1-(tops+bots+(nrow-1)*dy))/nrow;
-count_col = 1;
-count_row = 1;
-% *************************************************************** %
-
-pcolor(xVec, zVec, NAP(:,theIndex)*1000); shading interp
-hold on
-contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
-% $$$ map = brewermap(14, 'PuBuGn'); 
-% $$$ colormap(map);
-load('PuBuGn_modif.mat');
-colormap(PuBuGn_modif);
-caxis([0, .1]*1000)
-ylabel('Depth (m)', 'FontSize', FS1, 'fontWeight', 'bold')
-set(gca, 'ygrid', 'on');
-set(gca, 'ydir', 'reverse');
-set(gca, 'xtick', XTICKS)
-set(gca, 'tickdir', 'out');
-xlim(XLIM)
-ylim([0 zMax])
-cb = colorbar;
-text(XLIM(1)+1,300, '[Naph-like] (ng L^{-1})  (e)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
-
-adjust_space
-pause(1)
-
-cpos = get(cb, 'pos');
-cpos(1) = cpos(1) - cbar_offset;
-cpos(2) = cpos(2)+(cpos(4)-cpos(4)*vredux)/2;
-cpos(4) = cpos(4)*vredux;
-cpos(3) = cpos(3)*hredux;
-set(cb, 'pos', cpos)
-set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_TRY_noplot.png')  
 
 
 %% --------------------------------------------------------------------- %
@@ -284,7 +225,7 @@ hold on
 contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
 map = brewermap(16, 'YlOrBr');        
 colormap(map)
-caxis([1 2.2])
+caxis([1.5 2])
 ylabel('Depth (m)', 'FontSize', FS1, 'fontWeight', 'bold')
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -294,7 +235,7 @@ xlim(XLIM)
 ylim([0 zMax])
 xlabel('Along-transect distace (km)', 'FontSize', 10, 'fontWeight', 'bold')
 cb = colorbar;
-text(XLIM(1)+1,300, '[humic-like] (\mug L^{-1})  (G)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, '[CDOM] (\mug L^{-1})  (I)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 
 adjust_space
 pause(1)
@@ -307,64 +248,8 @@ cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
 pause(.5)
-print(gcf, '-dpng', '-r300', 'M312_CDOM_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_CDOM_noplot.png')  
 
-
-
-%% --------------------------------------------------------------------- %
-figure(6) % PHE
-clf
-set(gcf,'PaperUnits','centimeters','PaperPosition',[0 0 10 5.5])
-% *********************** Adjust_space.m ************************ %
-% Fields required by the function adjust_space.m. Please fill every
-% of the following and call "adjust_space" in the script whenever
-% you want. Do not touch four last fields
-ncol = 1; % no. subplot column
-nrow = 1; % no. subplot row
-dx = 0.04; % horiz. space between subplots
-dy = 0.1; % vert. space between subplots
-lefs = 0.11; % very left of figure
-rigs = 0.15; % very right of figure
-tops = 0.02; % top of figure
-bots = 0.16; % bottom of figure
-figw = (1-(lefs+rigs+(ncol-1)*dx))/ncol;
-figh = (1-(tops+bots+(nrow-1)*dy))/nrow;
-count_col = 1;
-count_row = 1;
-% *************************************************************** %
-
-%% ATTENTION PHE TRES SENSIBLE AU BLANK...
-pcolor(xVec, zVec, PHE(:,theIndex)*1000); shading interp
-hold on
-contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
-load('PuBuGn_modif.mat');
-colormap(PuBuGn_modif);
-caxis([20, 24])
-set(gca, 'ygrid', 'on');
-set(gca, 'ydir', 'reverse');
-set(gca, 'xtick', XTICKS)
-set(gca, 'tickdir', 'out');
-set(gca, 'yticklabel', [])
-xlim(XLIM)
-ylim([0 zMax])
-cb = colorbar;
-text(XLIM(1)+1,300, '[Phe-like] (ng L^{-1})  (f)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
-
-adjust_space
-pause(1)
-
-cpos = get(cb, 'pos');
-cpos(1) = cpos(1) - cbar_offset;
-cpos(2) = cpos(2)+(cpos(4)-cpos(4)*vredux)/2;
-cpos(4) = cpos(4)*vredux;
-cpos(3) = cpos(3)*hredux;
-set(cb, 'pos', cpos)
-set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_PHE_noplot.png')  
-
-
-
-%% --------------------------------------------------------------------- %
 
 
 figure(7) % Turbidity
@@ -393,7 +278,7 @@ hold on
 contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
 map = brewermap(16, 'YlOrBr');        
 colormap(map)
-caxis([-4 -3.5])
+caxis([-4 -3])
 set(gca, 'yticklabel', []);
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -404,7 +289,7 @@ ylim([0 zMax])
 xlabel('Along-transect distace (km)', 'FontSize', 10, 'fontWeight', 'bold')
 cb = colorbar;
 %ti = ylabel(cb,'log_{10}(Backscatter)', 'FontSize', 10, 'fontweight', 'bold');
-text(XLIM(1)+1,300, 'log_{10}(BB700)  (H)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, 'log_{10}(BB700)  (H)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 
 adjust_space
 pause(1)
@@ -416,7 +301,7 @@ cpos(4) = cpos(4)*vredux;
 cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_BB_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_BB_noplot.png')  
 
 
 
@@ -448,7 +333,7 @@ hold on
 contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
 map = flipud(brewermap(14, 'RdBu'));
 colormap(map)
-caxis([-4.7 -3.2])
+caxis([-5 -3])
 ylabel('Depth (m)', 'FontSize', FS1, 'fontWeight', 'bold')
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -459,7 +344,7 @@ ylim([0 zMax])
 %xlabel('Along-transect distace (km)', 'FontSize', 10, 'fontWeight', 'bold')
 cb = colorbar;
 %ti = ylabel(cb,'log_{10}(N^2)', 'FontSize', 10, 'fontweight', 'bold');
-text(XLIM(1)+1,300, 'log_{10}(N^2 (s^{-2}))  (C)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, 'log_{10}(N^2 (s^{-2}))  (C)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 
 adjust_space
 pause(1)
@@ -471,7 +356,7 @@ cpos(4) = cpos(4)*vredux;
 cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_N2_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_N2_noplot.png')  
 
 
 
@@ -502,7 +387,7 @@ hold on
 contour(xVecCTD, zVec, sig0(:,theIndexCTD), v1, 'color', [.5 .5 .5])
 map = brewermap(14, 'RdBu');
 colormap(map)
-caxis([225 275])
+caxis([200, 350])
 ylabel('Depth (m)', 'FontSize', FS1, 'fontWeight', 'bold')
 set(gca, 'ygrid', 'on');
 set(gca, 'ydir', 'reverse');
@@ -511,7 +396,7 @@ set(gca, 'tickdir', 'out');
 xlim(XLIM)
 ylim([0 zMax])
 cb = colorbar;
-text(XLIM(1)+1,300, 'O_2 (\mumol Kg^{-1})  (I)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold', 'color',[1 1 1]*0)
+text(XLIM(1)+2,300, 'O_2 (\mumol Kg^{-1})  (E)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold', 'color',[1 1 1]*0)
 
 adjust_space
 pause(1)
@@ -523,9 +408,9 @@ cpos(4) = cpos(4)*vredux;
 cpos(3) = cpos(3)*hredux;
 set(cb, 'pos', cpos)
 set(gcf, 'renderer', 'painters')
-print(gcf, '-dpng', '-r300', 'M312_O2_noplot.png')  
+print(gcf, '-dpng', '-r300', 'M34_O2_noplot.png')  
 
 
 pause(1)
 
-!montage M312_T_noplot.png M312_S_noplot.png M312_O2_noplot.png M312_CHL_noplot.png M312_TRY_noplot.png M312_PHE_noplot.png M312_CDOM_noplot.png M312_BB_noplot.png -tile 2x4  -geometry 740x390+1+1  M312_pah_mfl.png 
+!montage M34_T_noplot.png M34_S_noplot.png M34_N2_noplot.png M34_CHL_noplot.png  M34_O2_noplot.png  M34_BB_noplot.png  M34_CDOM_noplot.png -tile 2x4  -geometry 740x390+1+1  M34_bb2018.png 

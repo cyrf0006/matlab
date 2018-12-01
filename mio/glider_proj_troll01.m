@@ -17,6 +17,11 @@ NAP_calib = 0.3154; % N=5
 NAP_blank = 0.0684;
 PHE_calib = 3.0869;
 PHE_blank = -0.0177;
+% $$$ % Diesel
+% $$$ NAP_calib = 0.1134; % N=5
+% $$$ NAP_blank = 0.3958;
+% $$$ PHE_calib = 0.6002;
+% $$$ PHE_blank = 0.1388;
 %I = find(TRYru>.14); % <---- Try to flag bad counts See how I can do it better!
 %TRYru(I) = NaN;
 PHE = ( PHEru - PHE_blank)./PHE_calib;
