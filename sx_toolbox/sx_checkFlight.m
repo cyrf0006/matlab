@@ -33,6 +33,7 @@ ylabel('Depth')
 xlabel('Time (seconds in profiles)')
 set(gca, 'ygrid', 'on')
 set(gca, 'xgrid', 'on')
+set(gca, 'ydir', 'reverse')
 title([filename])
 
 % plot Ballast
@@ -46,6 +47,18 @@ xlabel('Time (seconds in profiles)')
 set(gca, 'ygrid', 'on')
 title([filename])
 
+% plot Linear
+figure
+plot(data(:,1)-data(1,1), data(:,15))
+hold on
+plot(data(:,1)-data(1,1), data(:,16), 'r')
+legend('Cmd', 'Pos')
+ylabel('Linear (mm)')
+xlabel('Time (seconds in profiles)')
+set(gca, 'ygrid', 'on')
+title([filename])
+
+
 % plot Heading
 figure
 plot(data(:,1)-data(1,1), data(:,12))
@@ -56,6 +69,7 @@ ylabel('Heading')
 xlabel('Time (seconds in profiles)')
 set(gca, 'ygrid', 'on')
 title([filename])
+
 
 R = input('want more plots (NavState, Alarm, etc.)? (y/n)','s');
 if strcmp(R, 'y')~=1

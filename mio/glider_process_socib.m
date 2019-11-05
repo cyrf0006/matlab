@@ -173,11 +173,10 @@ output.CHL = CHL;
 output.BB = BB;
 output.CDOM = CDOM;
 
+%% MiniFLuo MFL-UV1
+if isfield(s.data_grid, 'MFL') | isfield(s.data_grid, 'fluorescence_255_360') % Check if MiniFluo is there
 
-%% MiniFLuo
-if isfield(s.data_grid, 'MFL') % Check if MiniFluo is there
-
-    disp(' -> Minifluo-UV')
+    disp(' -> Minifluo-UV1')
     % Check version of MFL
     if s.deployment.calibration.MFL.SN <= 8 % legacy
         TRYc = s.data_grid.fluorescence_270_340'; % counts
@@ -190,7 +189,7 @@ if isfield(s.data_grid, 'MFL') % Check if MiniFluo is there
         TRYm = s.data_grid.fluorescence_monitoring_270_340'; % counts_monitor
         PHEm = s.data_grid.fluorescence_monitoring_255_360'; % counts_monitor
     end
-
+    
     % restrict depths
     TRYc = TRYc(Iz,:);
     TRYm = TRYm(Iz,:);
@@ -242,6 +241,64 @@ if isfield(s.data_grid, 'MFL') % Check if MiniFluo is there
     output.TRYru = TRY_ru;
     output.PHEru = PHE_ru;
 
-
 end
 
+%% MiniFLuo MFL-UV2
+if isfield(s.data_grid, 'MFL') | isfield(s.data_grid, 'fluorescence_260_315') % Check if MiniFluo is there
+
+    disp(' -> Minifluo-UV2')
+    % Check version of MFL
+    if s.deployment.calibration.MFL.SN <= 8 % legacy
+        FLUc = s.data_grid.fluorescence_260_315'; % counts
+        PYRc = s.data_grid.fluorescence_270_376'; % counts
+        FLUm = s.data_grid.fluorescence_monitoring_260_315'; % counts_monitor
+        PYRm = s.data_grid.fluorescence_monitoring_270_376'; % counts_monitor
+    else
+        FLUc = s.data_grid.fluorescence_260_315'; % counts
+        PYRc = s.data_grid.fluorescence_270_376'; % counts
+        FLUm = s.data_grid.fluorescence_monitoring_260_315'; % counts_monitor
+        PYRm = s.data_grid.fluorescence_monitoring_270_376'; % counts_monitor
+    end
+
+    % restrict depths
+    FLUc = FLUc(Iz,:);
+    FLUm = FLUm(Iz,:);
+    PYRc = PYRc(Iz,:);
+    PYRm = PYRm(Iz,:);
+
+    % fill missing (replace sx_cleanCTD.m)
+    FLUc =  sx_clean_missing(timeVec, zVec, FLUc);
+    FLUm =  sx_clean_missing(timeVec, zVec, FLUm);
+    PYRc =  sx_clean_missing(timeVec, zVec, PYRc);
+    PYRm =  sx_clean_missing(timeVec, zVec, PYRm);
+
+
+    % get + apply calibration
+    FLU_calib = s.deployment.calibration.MFL.FLU_std;
+    PYR_calib = s.deployment.calibration.MFL.PYR_spf;
+    if exist('s.deployment.calibration.MFL.FLU_std_blank')
+        FLU_blank = s.deployment.calibration.MFL.FLU_std_blank;
+        PYR_blank = s.deployment.calibration.MFL.PYR_spf_blank;
+    else
+        FLU_blank = 0;
+        PYR_blank = 0;
+    end  
+    DARK = s.deployment.calibration.MFL.DARK;
+
+    FLU_ru = ( ((FLUc-DARK)./(FLUm-DARK)) );
+    PYR_ru = ( ((PYRc-DARK)./(PYRm-DARK)) );
+
+    if isempty(NAP_blank) % Assume blank = 0;
+        FLU = ( ((FLUc-DARK)./(FLUm-DARK)) )./FLU_calib;
+        PYR = ( ((PYRc-DARK)./(PYRm-DARK)) )./PYR_calib;
+    else
+        FLU = ( ((FLUc-DARK)./(FLUm-DARK)) - FLU_blank)./FLU_calib;
+        PYR = ( ((PYRc-DARK)./(PYRm-DARK)) - PYR_blank)./PYR_calib;
+    end
+
+    output.FLU = FLU;
+    output.PYR = PYR;
+    output.FLUru = FLU_ru;
+    output.PYRru = PYR_ru;
+
+end

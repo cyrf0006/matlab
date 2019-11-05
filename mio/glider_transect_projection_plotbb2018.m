@@ -14,7 +14,7 @@ texty3 = 20;
 
 FS1=12; % label
 %XLIM = [0 m_lldist([origin(2) target(2)], [origin(1) target(1)],1)]; %<-- aimed transect
-XLIM = [0 150];
+XLIM = [0 270];
 XTICKS = 0:20:XLIM(end);
 v1 = [24:.5:28];
 v2 = [24:.2:28];
@@ -235,7 +235,7 @@ xlim(XLIM)
 ylim([0 zMax])
 xlabel('Along-transect distace (km)', 'FontSize', 10, 'fontWeight', 'bold')
 cb = colorbar;
-text(XLIM(1)+2,300, '[CDOM] (\mug L^{-1})  (I)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, '[CDOM] (\mug L^{-1})  (G)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 
 adjust_space
 pause(1)
@@ -289,7 +289,7 @@ ylim([0 zMax])
 xlabel('Along-transect distace (km)', 'FontSize', 10, 'fontWeight', 'bold')
 cb = colorbar;
 %ti = ylabel(cb,'log_{10}(Backscatter)', 'FontSize', 10, 'fontweight', 'bold');
-text(XLIM(1)+2,300, 'log_{10}(BB700)  (H)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
+text(XLIM(1)+2,300, 'log_{10}(BB700)  (F)', 'horizontalAlignment', 'left', 'fontSize', FS1, 'fontWeight', 'bold')
 
 adjust_space
 pause(1)

@@ -16,7 +16,8 @@ origin = [48.733, -52.967]; % (Lat,Lon)
 target = [50.32, -47.947];
 timeLims = [];
 timeLims = [datenum(2018,11,06,15,0,0) datenum(2018,11,18,15,0,0)]; % First transect
-                                                                    %timeLims = [datenum(2018,11,18,15,0,0) datenum(2018,11,27,15,0,0)]; % Return transect 
+
+%timeLims = [datenum(2018,11,18,15,0,0) datenum(2018,11,27,15,0,0)]; % Return transect 
 
 % For montage, see ~/research/MIO/M312-Troll01/allPortions/README
 

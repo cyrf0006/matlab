@@ -4,7 +4,7 @@ close all
 clear all
 
 %% Load data file (originaly glider_contours2.m)
-matFile = '~/data/GliderData/SEA003/20180503/matlab/SEA003_20180503_l2.mat'
+matFile = '~/data/gliders_data/SEA003/20180503/matlab/SEA003_20180503_l2.mat'
 output = glider_process_socib(matFile, 0, 650, 1);
 names = fieldnames(output);
 for i=1:length(names)
@@ -37,18 +37,9 @@ end
 % 1. L1-L2 transect
 origin = [38.94253, 2.96987]; % (Lat,Lon)
 target = [37.88908, 2.64376];
-%timeLims = [datenum(2018,05,04,22,0,0) datenum(2018,05,10,0,0,0)]; % First transect                                          
+
+%timeLims = [datenum(2018,05,04,22,0,0) datenum(2018,05,10,0,0,0)];% First transect
 timeLims = [datenum(2018,05,09,23,30,0) datenum(2018,05,13,19,0,0)]; % Return transect
-
-
-% 2. T1-T2 (TrollA-TrollB) 
-% $$$ origin = [WP(3,1) WP(3,2)]; % (Lat,Lon)
-% $$$ target = [WP(4,1) WP(4,2)];
-% $$$ timeLims = [timeVec(225) timeVec(260)]; % 1st transect                                           
-% $$$ timeLims = [timeVec(324) timeVec(349)]; % 2nd transect                                           
-% $$$ timeLims = [timeVec(349) timeVec(379)]; % 3rd transect                                           
-% $$$ timeLims = [timeVec(379) timeVec(407)]; % 4th transect                                           
-% $$$ timeLims = [timeVec(407) timeVec(447)]; % 5th transect                                           
 
 % For montage, see ~/research/MIO/M312-Troll01/allPortions/README
 
@@ -66,5 +57,6 @@ end
 
 %% plot script
 
-%glider_transect_projection_plottroll01
-%glider_transect_projection_plottroll01_MS
+%glider_transect_projection_plotpreswot_zoom
+%glider_transect_projection_plotpreswot
+
